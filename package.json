@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "author": "Fábio Pereira Braga fabio.pereirabraga@gmail.com",
   "license": "ISC",
-  "repository": "",
+  "repository": "git@github.com:FabioPereiraBraga/gitlab-sync.git",
   "insomnia": {
     "name": "gitlab-sync",
     "displayName": "GitLab Sync",
