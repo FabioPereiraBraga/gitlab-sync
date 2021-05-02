@@ -1,0 +1,23 @@
+{
+  "name": "insomna-plugin-gitlab-sync",
+  "version": "1.0.0",
+  "description": "Plugin insomnia synchronize collection with gitLab repository",
+  "main": "src/index.js",
+  "author": "Fábio Pereira Braga fabio.pereirabraga@gmail.com",
+  "license": "ISC",
+  "repository": "",
+  "insomnia": {
+    "name": "gitlab-sync",
+    "displayName": "GitLab Sync",
+    "description": "Plugin insomnia synchronize collection with gitLab repository",
+    "images": {
+      "icon": "icon.svg"
+    },
+    "applications": {
+      "core": "*"
+    }
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
