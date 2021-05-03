@@ -13,7 +13,7 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
 
 **Git**
 
-1. git clone git@github.com:FabioPereiraBraga/gitlab-sync.git
+1. git clone https://github.com/FabioPereiraBraga/gitlab-sync.git
 2. Download the used libraries
     ```
      cd gitlab-sync
