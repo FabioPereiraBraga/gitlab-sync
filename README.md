@@ -14,7 +14,12 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
 **Git**
 
 1. git clone git@github.com:FabioPereiraBraga/gitlab-sync.git
-2. Add the directory installed in the insomnia plugins folder.
+2. Download the used libraries
+    ```
+     cd gitlab-sync
+     npm install
+    ```
+3. Add the directory installed in the insomnia plugins folder.
 
    ```
    cp gitlab-sync  /home/you-user/.config/Insomnia/plugins
@@ -22,18 +27,6 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
    **Note** 
    
    The path of the plugins directory may change according to the distribution of the operating system 
-
-**NPM**
-
-1. npm i insomna-plugin-gitlab-sync
-2. Add the directory installed in the insomnia plugins folder.
-
-    ```
-   cp gitlab-sync  /home/you-user/.config/Insomnia/plugins
-   ``` 
-   **Note** 
-   
-   The path of the plugins directory may change according to the distribution of the operating system
 
 # Configure
 
