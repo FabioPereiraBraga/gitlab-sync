@@ -55,7 +55,7 @@ module.exports.workspaceActions = [
   },
   {
     label: 'GitLab - Pull Collection',
-    icon: 'fa-search',
+    icon: 'fa-download',
     action: async (context, models) => {
       loadProvider(context)
 
@@ -72,7 +72,7 @@ module.exports.workspaceActions = [
   },
   {
     label: 'GitLab - Push Collection',
-    icon: 'fa-pencil-square-o',
+    icon: 'fa-upload',
     action: async (context, models) => {
 
       loadProvider(context)
