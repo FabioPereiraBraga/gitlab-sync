@@ -38,7 +38,8 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
 
 3. Go to Insomnia, click on Insomnia Main Menu, and click on "GitLab - Settings":
    
-   ![image](https://user-images.githubusercontent.com/10922392/117334191-1366b380-ae70-11eb-8720-38c45fb9069f.png)
+  ![image](https://user-images.githubusercontent.com/10922392/117336023-267a8300-ae72-11eb-8982-efecdd532818.png)
+
 
    **Inform the following parameters**
 
