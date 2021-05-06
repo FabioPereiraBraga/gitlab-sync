@@ -4,7 +4,7 @@ const gitlab = require('./sync/gitlab.js');
 var provider;
 
 
-async function loadConfig(context, forceReprompt) {
+async function loadConfig(context) {
   const configStorage = await context.store.getItem('gitlab-sync:config');
   
     // Prompt for the configuration
@@ -18,33 +18,29 @@ async function loadConfig(context, forceReprompt) {
       }
       );
     } catch (e) { return false }
-
-    // Validate the JSON config
-    try {
-      var configObject = JSON.parse(config);
-    } catch (e) {
-      context.app.alert("Invalid JSON!", "Error: " + e.message);
-      return false;
-    }
-
-    // Check if it is possible to instantiate the provider with the config
-    if(!loadProvider(context, configObject)){
-      return false;
-    }
+  
 
     await context.store.setItem('gitlab-sync:config', config);
-    return configObject;
   
+    return true;
  
 }
 
-function loadProvider(context, config){
-  console.log("Loaded config", config)
-  try {
-    provider = new gitlab(context, config);
-  } catch (e) {
-    context.app.alert('Configuration error', e.message);
-  }
+function loadProvider(context){
+  let configStorage = context.store.getItem('gitlab-sync:config') 
+  
+
+
+  configStorage.then( (value)=>{
+    var configObject = JSON.parse(value);
+    console.log("Loaded config", value)
+    provider = new gitlab(context, configObject);
+  }, ( err )=>{
+    context.app.alert("Invalid JSON!", "Error: " + e.message);
+    return false;
+  });
+
+ 
   return true
 }
 
@@ -61,19 +57,16 @@ module.exports.workspaceActions = [
     label: 'GitLab - Search Collection',
     icon: 'fa-search',
     action: async (context, models) => {
-      const config = await context.store.getItem('gitlab-sync:config');
-      if (!config) {
-        await context.app.alert( 'GitLab - Settings', 'No configuration settings were found.' );
-        return;
-      }
+      loadProvider(context)
 
       try{
+        console.log( context.data.import );
         const file = await provider.get();
         const content = JSON.stringify(file);
         await context.data.import.raw(content);
         await context.app.alert( 'GitLab - Search Collection', 'Process concluded' );
       } catch (e) {
-        await context.app.alert( `Collection query error for the project ${config.id_project}`, e.message );
+        await context.app.alert( `Collection query error for the project`, e.message );
         return;
       }
     },
@@ -82,15 +75,13 @@ module.exports.workspaceActions = [
     label: 'GitLab - Update Collection',
     icon: 'fa-pencil-square-o',
     action: async (context, models) => {
-      const config = await context.store.getItem('gitlab-sync:config');
-      if (!config) {
-        await context.app.alert( 'GitLab - Settings', 'No configuration settings were found.' );
-        return;
-      }
+
+      loadProvider(context)
 
       const data = await context.data.export.insomnia({
         includePrivate: false,
         format: 'json',
+        workspace: models.workspace
       });
       const content = JSON.stringify(JSON.parse(data), null, 2);
 
@@ -98,7 +89,7 @@ module.exports.workspaceActions = [
           provider.update(content);
           await context.app.alert( 'GitLab - Update Collection', 'Process concluded' );
       } catch (e) {
-        await context.app.alert( `Collection update error for the project, ${config.id_project}`, e.message );
+        await context.app.alert( `Collection update error for the project,`, e.message );
         return;
       }
     },
