@@ -63,7 +63,7 @@ module.exports.workspaceActions = [
         const file = await provider.get();
         const content = JSON.stringify(file);
         await context.data.import.raw(content);
-        await context.app.alert( 'GitLab - Search Collection', 'Process concluded' );
+        await context.app.alert( 'GitLab - Pull Collection', 'Process concluded' );
       } catch (e) {
         await context.app.alert( `Collection query error for the project`, e.message );
         return;
@@ -86,7 +86,7 @@ module.exports.workspaceActions = [
 
       try {
           provider.update(content);
-          await context.app.alert( 'GitLab - Update Collection', 'Process concluded' );
+          await context.app.alert( 'GitLab - Push Collection', 'Process concluded' );
       } catch (e) {
         await context.app.alert( `Collection update error for the project,`, e.message );
         return;
