@@ -31,8 +31,15 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
 # Configure
 
 1. Create a personal access token to your GitLab account.
-2. Go to Insomnia, click on Insomnia Main Menu, and click on "GitLab - Settings":
    
+   Scope Api
+   
+   ![image](https://user-images.githubusercontent.com/10922392/117333905-cd115480-ae6f-11eb-8b54-689252846e8b.png)
+
+3. Go to Insomnia, click on Insomnia Main Menu, and click on "GitLab - Settings":
+   
+   ![image](https://user-images.githubusercontent.com/10922392/117334191-1366b380-ae70-11eb-8720-38c45fb9069f.png)
+
    **Inform the following parameters**
 
    ```
@@ -44,6 +51,9 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
         "ref": "master"
     }
    ```
+   
+   ![image](https://user-images.githubusercontent.com/10922392/117334413-5aed3f80-ae70-11eb-89ac-5c69998b24d4.png)
+
 # Usage
 
 * Click on "GitLab - Pull Collection" to search the collections of the project informed in the settings
