@@ -54,13 +54,12 @@ module.exports.workspaceActions = [
     },
   },
   {
-    label: 'GitLab - Search Collection',
+    label: 'GitLab - Pull Collection',
     icon: 'fa-search',
     action: async (context, models) => {
       loadProvider(context)
 
       try{
-        console.log( context.data.import );
         const file = await provider.get();
         const content = JSON.stringify(file);
         await context.data.import.raw(content);
@@ -72,7 +71,7 @@ module.exports.workspaceActions = [
     },
   },
   {
-    label: 'GitLab - Update Collection',
+    label: 'GitLab - Push Collection',
     icon: 'fa-pencil-square-o',
     action: async (context, models) => {
 

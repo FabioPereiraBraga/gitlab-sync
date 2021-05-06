@@ -46,8 +46,8 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
    ```
 # Usage
 
-* Click on "GitLab - Search Collection" to search the collections of the project informed in the settings
-* Click on "GitLab - Update Collection" 
+* Click on "GitLab - Pull Collection" to search the collections of the project informed in the settings
+* Click on "GitLab - Push Collection" 
 to send updates made to the project collection informed in the settings
 
 
