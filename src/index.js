@@ -26,19 +26,17 @@ async function loadConfig(context) {
  
 }
 
-function loadProvider(context){
-  let configStorage = context.store.getItem('gitlab-sync:config') 
+async function loadProvider(context){
+  try{
+    let configStorage = await context.store.getItem('gitlab-sync:config') 
   
-
-
-  configStorage.then( (value)=>{
-    var configObject = JSON.parse(value);
-    console.log("Loaded config", value)
+    var configObject = JSON.parse(configStorage);
+    console.log("Loaded config", configStorage)
     provider = new gitlab(context, configObject);
-  }, ( err )=>{
-    context.app.alert("Invalid JSON!", "Error: " + e.message);
+  } catch (error) {
+    context.app.alert("Invalid JSON!", "Error: " + error.message);
     return false;
-  });
+  }
 
  
   return true
@@ -57,9 +55,8 @@ module.exports.workspaceActions = [
     label: 'GitLab - Pull Collection',
     icon: 'fa-download',
     action: async (context, models) => {
-      loadProvider(context)
-
       try{
+        await loadProvider(context)
         const files = await provider.get();
         for (let file of files) {
           const content = JSON.stringify(file);
@@ -76,17 +73,16 @@ module.exports.workspaceActions = [
     label: 'GitLab - Push Collection',
     icon: 'fa-upload',
     action: async (context, models) => {
-
-      loadProvider(context)
-
-      const data = await context.data.export.insomnia({
-        includePrivate: false,
-        format: 'json',
-        workspace: models.workspace
-      });
-      const content = JSON.stringify(JSON.parse(data), null, 2);
-
       try {
+        await loadProvider(context)
+
+        const data = await context.data.export.insomnia({
+          includePrivate: false,
+          format: 'json',
+          workspace: models.workspace
+        });
+        const content = JSON.stringify(JSON.parse(data), null, 2);
+
           provider.update(content);
           await context.app.alert( 'GitLab - Push Collection', 'Process concluded' );
       } catch (e) {
