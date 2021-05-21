@@ -1,5 +1,7 @@
 # gitlab-sync
-plugin para o insomnia
+This plugin was developed and froked from: https://github.com/FabioPereiraBraga/gitlab-sync
+
+I just added batch functionality for pull and fixed problem with workspaces.
 
 # Overview 
 
@@ -13,8 +15,9 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
 
 **Git**
 
-1. git clone https://github.com/FabioPereiraBraga/gitlab-sync.git
-2. Download the used libraries
+1. git clone https://github.com/jcavendish/gitlab-sync.git
+
+2. Download libraries
     ```
      cd gitlab-sync
      npm install
@@ -22,7 +25,8 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
 3. Add the directory installed in the insomnia plugins folder.
 
    ```
-   cp gitlab-sync  /home/you-user/.config/Insomnia/plugins
+   cd ..
+   cp -R gitlab-sync  /Users/YOUR-USER/Library/Application\ Support/Insomnia/plugins
    ``` 
    **Note** 
    
@@ -48,7 +52,7 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
         "api_url": "http://url-you-server-gitlab.com", 
         "token": "you-personal-access-token", 
         "id_project": "id-project", 
-        "name_file": "name-file", 
+        "files": [{ "name": "file-name" }, { "name": "file-name" }], 
         "ref": "master"
     }
    ```
