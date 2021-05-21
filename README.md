@@ -1,7 +1,6 @@
 # gitlab-sync
-This plugin was developed and forked from: https://github.com/FabioPereiraBraga/gitlab-sync
 
-I just added batch functionality for pull and fixed problem with workspaces.
+Plugin for Insomnia to synchronize collections with a gitLab repository.
 
 # Overview 
 
@@ -9,9 +8,9 @@ This plugin allows users to synchronize collections with a gitlab repository
 
 # Installation
 
-**Gerenciador plugin insomnia**
+**Insomnia's plugin manager**
 
-Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
+Install the insomnia-plugin-gitlab-sync plugin from Preferences > Plugins
 
 **Git**
 
@@ -64,5 +63,4 @@ Install the insomna-plugin-gitlab-sync plugin from Preferences > Plugins
 * Click on "GitLab - Pull Collection" to search the collections of the project informed in the settings
 * Click on "GitLab - Push Collection" 
 to send updates made to the project collection informed in the settings
-
 
