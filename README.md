@@ -1,5 +1,5 @@
 # gitlab-sync
-This plugin was developed and froked from: https://github.com/FabioPereiraBraga/gitlab-sync
+This plugin was developed and forked from: https://github.com/FabioPereiraBraga/gitlab-sync
 
 I just added batch functionality for pull and fixed problem with workspaces.
 
