@@ -63,4 +63,17 @@ Install the insomnia-plugin-gitlab-sync plugin from Preferences > Plugins
 * Click on "GitLab - Pull Collection" to search the collections of the project informed in the settings
 * Click on "GitLab - Push Collection" 
 to send updates made to the project collection informed in the settings
+  
+# Development
+
+## "Deploying"
+
+- $ npm run build-ts
+- $ rm -fr ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync/
+- $ mkdir -p ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync
+- $ cp package.json ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync/
+- $ cp -R node_modules/ ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync/node_modules
+- $ cp -R built ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync/built
+
+Only the 1st and last step are necessary afterwards, assuming there's no new lib dependency added.
 
