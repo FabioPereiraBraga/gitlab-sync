@@ -12,7 +12,7 @@ async function loadConfig(context) {
       var config = await context.app.prompt(
       'GitLab - Settings', {
         label: 'JSON string',
-        defaultValue: configStorage || '{"api_url": "", "token": "", "id_project": "", "name_file": "", "ref": ""}',
+        defaultValue: configStorage || '{"api_url": "", "token": "", "id_project": "", "files": [{"name":""}], "ref": ""}',
         submitName: 'Save',
         cancelable: true,
       }
@@ -60,9 +60,11 @@ module.exports.workspaceActions = [
       loadProvider(context)
 
       try{
-        const file = await provider.get();
-        const content = JSON.stringify(file);
-        await context.data.import.raw(content);
+        const files = await provider.get();
+        for (let file of files) {
+          const content = JSON.stringify(file);
+          await context.data.import.raw(content, { workspaceId: models.workspace._id });
+        }
         await context.app.alert( 'GitLab - Pull Collection', 'Process concluded' );
       } catch (e) {
         await context.app.alert( `Collection query error for the project`, e.message );

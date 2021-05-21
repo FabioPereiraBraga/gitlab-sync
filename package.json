@@ -1,13 +1,13 @@
-{          
-  "name": "insomnia-plugin-gitlab-sync",
-  "version": "1.0.8",
+{
+  "name": "insomnia-plugin-gitlab-sync-multiple-files",
+  "version": "1.0.0",
   "description": "Plugin insomnia synchronize collection with gitLab repository",
   "main": "src/index.js",
-  "author": "Fábio Pereira Braga fabio.pereirabraga@gmail.com",
+  "author": "João Cavendish",
   "license": "MIT",
-  "repository": "git@github.com:FabioPereiraBraga/gitlab-sync.git",
+  "repository": "git@github.com:jcavendish/gitlab-sync",
   "insomnia": {
-    "name": "gitlab-sync",
+    "name": "gitlab-sync-multiple-files",
     "displayName": "GitLab Sync",
     "description": "Plugin insomnia synchronize collection with gitLab repository",
     "images": {

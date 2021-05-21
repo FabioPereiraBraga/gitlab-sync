@@ -17,10 +17,14 @@ class gitlab {
 
   async get(){
     try {
-      const response = await this.authenticate().get(
-        `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/files/${this.config.name_file}/raw?ref=${this.config.ref}`
-      );
-      return response.data;
+      const promises = [];
+      this.config.files.forEach(file => {
+        promises.push(this.authenticate().get(
+          `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/files/${file.name}/raw?ref=${this.config.ref}`
+        ))
+      });
+      const responses = await Promise.all(promises);
+      return responses.map(response => response.data);
     }catch (e) {
       throw `Collection query failed for informed project ${this.config.id_project}`
     }
