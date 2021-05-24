@@ -52,7 +52,7 @@ module.exports.workspaceActions = [
     label: 'GitLab - Pull Collection',
     icon: 'fa-download',
     action: async (context, models) => {
-      try{
+      try {
         await loadProvider(context)
 
         const files = await provider.get();
