@@ -31,7 +31,7 @@ async function loadProvider(context){
     console.log("Loaded config", configStorage)
 
     provider = new gitlab(context, configObject);
-  } catch (error) {
+  } catch (e) {
     context.app.alert("Invalid JSON!", "Error: " + error.message);
 
     return false;
