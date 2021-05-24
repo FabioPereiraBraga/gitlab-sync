@@ -1,8 +1,6 @@
 const gitlab = require('./sync/gitlab.js');
 
-
-var provider;
-
+let provider;
 
 async function loadConfig(context) {
   const configStorage = await context.store.getItem('gitlab-sync:config');
@@ -18,30 +16,29 @@ async function loadConfig(context) {
       }
       );
     } catch (e) { return false }
-  
 
     await context.store.setItem('gitlab-sync:config', config);
   
     return true;
- 
 }
 
 async function loadProvider(context){
-  try{
+  try {
     let configStorage = await context.store.getItem('gitlab-sync:config') 
   
-    var configObject = JSON.parse(configStorage);
+    const configObject = JSON.parse(configStorage);
+
     console.log("Loaded config", configStorage)
+
     provider = new gitlab(context, configObject);
-  } catch (error) {
-    context.app.alert("Invalid JSON!", "Error: " + error.message);
+  } catch (e) {
+    context.app.alert("Invalid JSON!", "Error: " + e.message);
+
     return false;
   }
 
- 
   return true
 }
-
 
 module.exports.workspaceActions = [
   {
@@ -55,17 +52,19 @@ module.exports.workspaceActions = [
     label: 'GitLab - Pull Collection',
     icon: 'fa-download',
     action: async (context, models) => {
-      try{
+      try {
         await loadProvider(context)
+
         const files = await provider.get();
+
         for (let file of files) {
           const content = JSON.stringify(file);
           await context.data.import.raw(content, { workspaceId: models.workspace._id });
         }
-        await context.app.alert( 'GitLab - Pull Collection', 'Process concluded' );
+
+        await context.app.alert('GitLab - Pull Collection', 'Process concluded');
       } catch (e) {
-        await context.app.alert( `Collection query error for the project`, e.message );
-        return;
+        await context.app.alert(`Collection query error for the project`, e.message);
       }
     },
   },
@@ -81,13 +80,14 @@ module.exports.workspaceActions = [
           format: 'json',
           workspace: models.workspace
         });
+
         const content = JSON.stringify(JSON.parse(data), null, 2);
 
-          provider.update(content);
-          await context.app.alert( 'GitLab - Push Collection', 'Process concluded' );
+        provider.update(content);
+
+        await context.app.alert('GitLab - Push Collection', 'Process concluded');
       } catch (e) {
-        await context.app.alert( `Collection update error for the project,`, e.message );
-        return;
+        await context.app.alert(`Collection update error for the project,`, e.message);
       }
     },
   }
