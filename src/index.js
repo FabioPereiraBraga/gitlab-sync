@@ -32,7 +32,7 @@ async function loadProvider(context){
 
     provider = new gitlab(context, configObject);
   } catch (e) {
-    context.app.alert("Invalid JSON!", "Error: " + error.message);
+    context.app.alert("Invalid JSON!", "Error: " + e.message);
 
     return false;
   }
