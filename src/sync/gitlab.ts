@@ -1,9 +1,15 @@
-const axios = require('axios');
+import axios from 'axios';
+import { InsomniaContext } from "../types/insomnia.types";
+import { GitlabServiceConfig } from "../types/plugin.type";
 
-class gitlab {
-  constructor (context, config) {
+export class GitlabService {
+  private config: GitlabServiceConfig;
+
+  constructor(readonly context: InsomniaContext, config: GitlabServiceConfig) {
     this.context = context
-    this.loadConfig(config)
+    this.config = config;
+
+    this.validateConfig(config)
 
     console.log("Loaded config", this.config)
   }
@@ -18,12 +24,10 @@ class gitlab {
 
   async get() {
     try {
-      const promises = [];
-
-      this.config.files.forEach(file => {
-        promises.push(this.authenticate().get(
-          `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/files/${file.name}/raw?ref=${this.config.ref}`
-        ))
+      const promises = this.config.files.map(file => {
+        return this.authenticate().get(
+          `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/files/${file}/raw?ref=${this.config.ref}`
+        )
       });
 
       const responses = await Promise.all(promises);
@@ -34,7 +38,7 @@ class gitlab {
     }
   }
 
-  async update(content) {
+  async update(content: string) {
    try {
     await this.authenticate().post(
       `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/commits`,
@@ -55,17 +59,7 @@ class gitlab {
    }
   }
 
-  loadConfig(config) {
-    this.config = config;
-    
-    if (typeof(config.token) !== "string" || config.token === "") {
-      throw "Invalid token";
-    }
-
-    if (typeof(config.timeout) !== "number" || config.timeout === "") {
-       this.config.timeout = 5000;
-    }
+  validateConfig(config: GitlabServiceConfig) {
+    if (config.token === "") { throw "Invalid token"; }
   }
 }
-
-module.exports = gitlab

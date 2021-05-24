@@ -66,6 +66,8 @@ to send updates made to the project collection informed in the settings
   
 # Development
 
+`types` stole from here: https://github.com/PoOwAa/insomnia-plugin-snippet-sync
+
 ## "Deploying"
 
 - $ npm run build-ts
