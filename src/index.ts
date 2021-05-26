@@ -1,49 +1,42 @@
 import { GitlabService } from './sync/gitlab.js';
-import {InsomniaContext, InsomniaWorkspaceActionModel} from "./types/insomnia.types";
-
-let provider: GitlabService;
+import { InsomniaContext, InsomniaWorkspaceActionModel } from "./types/insomnia.types";
 
 async function loadConfig(context: InsomniaContext) {
-  const configStorage = await context.store.getItem('gitlab-sync:config');
+  const configStorage = await context.store.getItem('gitlab-sync:config')
   
-    // Prompt for the configuration
-    try {
-      const config = await context.app.prompt(
-          'GitLab - Settings', {
-            label: 'JSON string',
-            defaultValue: configStorage || '{"api_url": "", "token": "", "id_project": "", "files": [{"name":""}], "ref": ""}',
-            submitName: 'Save',
-            cancelable: true,
-          });
+  // Prompt for the configuration
+  try {
+    const config = await context.app.prompt(
+        'GitLab - Settings', {
+          label: 'JSON string',
+          defaultValue: configStorage || '{"api_url": "", "token": "", "id_project": "", "files": [], "ref": ""}',
+          submitName: 'Save',
+          cancelable: true,
+        });
 
-      await context.store.setItem('gitlab-sync:config', config);
-    } catch (e) {
-      return false
-    }
-
-    return true;
+    await context.store.setItem('gitlab-sync:config', config)
+  } catch (e) {
+    await context.app.alert(e.message)
+  }
 }
 
-async function loadProvider(context: InsomniaContext){
+async function loadProvider(context: InsomniaContext): Promise<GitlabService> {
+  const configStorage = await context.store.getItem('gitlab-sync:config')
+
+  if (configStorage === null) {
+    throw Error("Unable to retrieve configStorage")
+  }
+
+  let configObject;
   try {
-    const configStorage = await context.store.getItem('gitlab-sync:config')
-
-    if (configStorage === null) {
-      throw Error("Unable to retrieve configStorage")
-    }
-  
-    const configObject = JSON.parse(configStorage)
-
-    console.log("Loaded config", configStorage)
-
-    provider = new GitlabService(context, configObject);
+    configObject = JSON.parse(configStorage)
   } catch (error) {
     await context.app.alert("Invalid JSON!", "Error: " + error.message)
 
-    return false
+    throw error;
   }
 
-  return true
+  return new GitlabService(context, configObject);
 }
 
 module.exports.workspaceActions = [
@@ -58,19 +51,19 @@ module.exports.workspaceActions = [
     label: 'GitLab - Pull Collection',
     icon: 'fa-download',
     action: async (context: InsomniaContext, models: InsomniaWorkspaceActionModel) => {
-      try{
-        await loadProvider(context)
+      try {
+        const provider = await loadProvider(context)
 
-        const files = await provider.get();
+        const files = await provider.get()
 
         for (let file of files) {
           const content = JSON.stringify(file);
-          await context.data.import.raw(content, { workspaceId: models.workspace._id });
+          await context.data.import.raw(content, { workspaceId: models.workspace._id })
         }
 
-        await context.app.alert('GitLab - Pull Collection', 'Process concluded');
+        await context.app.alert('GitLab - Pull Collection', 'Process concluded')
       } catch (e) {
-        await context.app.alert(`Collection query error for the project`, e.message);
+        await context.app.alert('Collection query error for the project', e.message)
       }
     },
   },
@@ -79,7 +72,7 @@ module.exports.workspaceActions = [
     icon: 'fa-upload',
     action: async (context: InsomniaContext, models: InsomniaWorkspaceActionModel) => {
       try {
-        await loadProvider(context)
+        const provider = await loadProvider(context)
 
         const data = await context.data.export.insomnia({
           includePrivate: false,
@@ -87,13 +80,13 @@ module.exports.workspaceActions = [
           // workspace: models.workspace
         });
 
-        const content = JSON.stringify(JSON.parse(data), null, 2);
+        const content = JSON.stringify(JSON.parse(data), null, 2)
 
-        await provider.update(content);
+        await provider.update(content)
 
-        await context.app.alert('GitLab - Push Collection', 'Process concluded');
+        await context.app.alert('GitLab - Push Collection', 'Process concluded')
       } catch (e) {
-        await context.app.alert(`Collection update error for the project,`, e.message);
+        await context.app.alert('Collection update error for the project', e.message)
       }
     },
   }
