@@ -1,42 +1,42 @@
 import { GitlabService } from './sync/gitlab.js';
 import { InsomniaContext, InsomniaWorkspaceActionModel } from "./types/insomnia.types";
+import { GitlabServiceConfig } from "./types/plugin.type";
 
-async function loadConfig(context: InsomniaContext) {
-  const configStorage = await context.store.getItem('gitlab-sync:config')
-  
-  // Prompt for the configuration
+const gitlabSyncConfigKey = 'gitlab-sync:config'
+const gitlabSyncLastCommitKey = 'gitlab-sync:lastCommit'
+const defaultConfig = '{"api_url": "", "token": "", "id_project": "", "files": [], "ref": ""}'
+
+async function fetchOrSetConfig(context: InsomniaContext): Promise<GitlabServiceConfig> {
   try {
-    const config = await context.app.prompt(
-        'GitLab - Settings', {
-          label: 'JSON string',
-          defaultValue: configStorage || '{"api_url": "", "token": "", "id_project": "", "files": [], "ref": ""}',
-          submitName: 'Save',
-          cancelable: true,
-        });
-
-    await context.store.setItem('gitlab-sync:config', config)
+    return await loadConfig(context)
   } catch (e) {
-    await context.app.alert(e.message)
+    await context.store.setItem(gitlabSyncConfigKey, defaultConfig)
+
+    return await loadConfig(context)
   }
 }
 
-async function loadProvider(context: InsomniaContext): Promise<GitlabService> {
-  const configStorage = await context.store.getItem('gitlab-sync:config')
+async function loadConfig(context: InsomniaContext): Promise<GitlabServiceConfig> {
+  let configStorage = await context.store.getItem(gitlabSyncConfigKey)
 
-  if (configStorage === null) {
-    throw Error("Unable to retrieve configStorage")
-  }
+  if (configStorage === null) { throw "Unable to fetch config" }
 
-  let configObject;
   try {
-    configObject = JSON.parse(configStorage)
-  } catch (error) {
-    await context.app.alert("Invalid JSON!", "Error: " + error.message)
+    return JSON.parse(configStorage)
+  } catch (e) {
+    await context.app.alert("Invalid JSON!", "Error: " + e.message)
 
-    throw error;
+    throw e;
+  }
+}
+
+let provider: GitlabService;
+async function loadProvider(context: InsomniaContext): Promise<GitlabService> {
+  if (!provider) {
+    provider = new GitlabService(context, await loadConfig(context))
   }
 
-  return new GitlabService(context, configObject);
+  return provider
 }
 
 module.exports.workspaceActions = [
@@ -44,7 +44,38 @@ module.exports.workspaceActions = [
     label: 'GitLab - Settings',
     icon: 'fa-cogs',
     action: async (context: InsomniaContext, models: InsomniaWorkspaceActionModel) => {
-      await loadConfig(context);
+      try {
+        const currentConfig = await fetchOrSetConfig(context);
+
+        const config = await context.app.prompt(
+            'GitLab - Settings', {
+              label: 'JSON string',
+              defaultValue: JSON.stringify(currentConfig),
+              submitName: 'Save',
+              cancelable: true,
+            });
+
+        await context.store.setItem(gitlabSyncConfigKey, config)
+      } catch (e) {
+        await context.app.alert(e.message)
+      }
+    },
+  },
+  {
+    label: 'GitLab - Check for updates',
+    icon: 'fa-cogs',
+    action: async (context: InsomniaContext, models: InsomniaWorkspaceActionModel) => {
+      const previousLastCommitFetched = await context.store.getItem(gitlabSyncLastCommitKey)
+
+      const provider = await loadProvider(context)
+
+      const repoLastCommit = await provider.getLastCommit()
+
+      if (repoLastCommit === previousLastCommitFetched) {
+        await context.app.alert('Collections are up to date', 'The repo has not been updated since the last pull')
+      } else {
+        await context.app.alert('Collections are outdated', 'The repo has been updated')
+      }
     },
   },
   {
@@ -54,12 +85,11 @@ module.exports.workspaceActions = [
       try {
         const provider = await loadProvider(context)
 
-        const files = await provider.get()
-
-        for (let file of files) {
-          const content = JSON.stringify(file);
-          await context.data.import.raw(content, { workspaceId: models.workspace._id })
+        for (let file of await provider.get()) {
+          await context.data.import.raw( JSON.stringify(file) )
         }
+
+        await context.store.setItem(gitlabSyncLastCommitKey, await provider.getLastCommit())
 
         await context.app.alert('GitLab - Pull Collection', 'Process concluded')
       } catch (e) {
