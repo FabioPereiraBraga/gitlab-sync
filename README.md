@@ -21,7 +21,7 @@ modify the script accordingly.
 
 1. Create a personal access token to your GitLab account.
    
-Mark `all the checkboxes`
+These permissions are required: `api`, `read_user`, `read_api` and `read_repository`.
    
    ![image](https://user-images.githubusercontent.com/10922392/117333905-cd115480-ae6f-11eb-8b54-689252846e8b.png)
 
@@ -43,7 +43,13 @@ Mark `all the checkboxes`
 
 # Usage
 
+## Pulling the collections
+
 * Click on "GitLab - Pull Collection" to retrieve the collections from the repo configured in the settings above.
+  
+## Sending back your changes
+
+* Request developer access on the repo you're fetching the collections from
 * Click on "GitLab - Push Collection" to send updates made to the project collection informed in the settings
   
 # Development
@@ -57,5 +63,6 @@ Mark `all the checkboxes`
 ## "Deploying"
 
 - build it
+- Comment the removal of the plugin directory in `install.sh`, otherwise you'll lose your saved config
 - run `install.sh`
 - In Insomnia: Tools -> Reload Plugins
