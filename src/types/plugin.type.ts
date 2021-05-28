@@ -1,4 +1,3 @@
-import {GitlabService} from "../sync/gitlab";
 
 export type Plugin = {
   name: string;
@@ -18,6 +17,6 @@ export type GitlabServiceConfig = {
   token: string,
   id_project: number,
   files: string[],
-  ref: string,
+  branch: string,
   timeout: number;
 }
