@@ -63,6 +63,5 @@ These permissions are required: `api`, `read_user`, `read_api` and `read_reposit
 ## How to "deploy"
 
 - build it
-- Comment the removal of the plugin directory in `install.sh`, otherwise you'll lose your saved config
 - run `install.sh`
 - In Insomnia: Tools -> Reload Plugins

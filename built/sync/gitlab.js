@@ -128,54 +128,83 @@ var GitlabService = /** @class */ (function () {
     };
     GitlabService.prototype.createBranch = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var branchName;
+            var branchName, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.getUserName()];
                     case 1:
                         branchName = _a.sent();
-                        return [4 /*yield*/, this.authenticate().post(this.baseGitlabUrl + "/repository/branches", { "branch": branchName, "ref": this.config.branch })];
+                        _a.label = 2;
                     case 2:
+                        _a.trys.push([2, 4, , 6]);
+                        return [4 /*yield*/, this.authenticate().post(this.baseGitlabUrl + "/repository/branches", { "branch": branchName, "ref": this.config.branch })];
+                    case 3:
                         _a.sent();
-                        return [2 /*return*/, branchName];
+                        return [3 /*break*/, 6];
+                    case 4:
+                        e_2 = _a.sent();
+                        return [4 /*yield*/, this.context.app.alert('ERROR on branch creation', "Check if you have permission and the branch doesn't already exists.\n " + e_2.message)];
+                    case 5:
+                        _a.sent();
+                        throw e_2;
+                    case 6: return [2 /*return*/, branchName];
                 }
             });
         });
     };
     GitlabService.prototype.commit = function (content, branchName) {
         return __awaiter(this, void 0, void 0, function () {
+            var e_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.authenticate().post(this.baseGitlabUrl + "/repository/commits", {
-                            "branch": branchName,
-                            "commit_message": "More requests!",
-                            "actions": [{
-                                    "action": "update",
-                                    "file_path": "workspace.json",
-                                    "content": content
-                                }]
-                        })];
+                    case 0:
+                        _a.trys.push([0, 2, , 4]);
+                        return [4 /*yield*/, this.authenticate().post(this.baseGitlabUrl + "/repository/commits", {
+                                "branch": branchName,
+                                "commit_message": "More requests!",
+                                "actions": [{
+                                        "action": "update",
+                                        "file_path": "workspace.json",
+                                        "content": content
+                                    }]
+                            })];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [3 /*break*/, 4];
+                    case 2:
+                        e_3 = _a.sent();
+                        return [4 /*yield*/, this.context.app.alert('ERROR on commit to branch', e_3.message)];
+                    case 3:
+                        _a.sent();
+                        throw e_3;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
     GitlabService.prototype.createMergeRequest = function (branchName) {
         return __awaiter(this, void 0, void 0, function () {
-            var ret;
+            var ret, e_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.authenticate().post(this.baseGitlabUrl + "/merge_requests", {
-                            "source_branch": branchName,
-                            "target_branch": this.config.branch,
-                            "title": "New requests from " + branchName,
-                            "remove_source_branch": true
-                        })];
+                    case 0:
+                        _a.trys.push([0, 2, , 4]);
+                        return [4 /*yield*/, this.authenticate().post(this.baseGitlabUrl + "/merge_requests", {
+                                "source_branch": branchName,
+                                "target_branch": this.config.branch,
+                                "title": "New requests from " + branchName,
+                                "remove_source_branch": true
+                            })];
                     case 1:
                         ret = _a.sent();
-                        return [2 /*return*/, ret.data.web_url];
+                        return [3 /*break*/, 4];
+                    case 2:
+                        e_4 = _a.sent();
+                        return [4 /*yield*/, this.context.app.alert('ERROR creating Merge Request', e_4.message)];
+                    case 3:
+                        _a.sent();
+                        throw e_4;
+                    case 4: return [2 /*return*/, ret.data.web_url];
                 }
             });
         });

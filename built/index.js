@@ -74,7 +74,7 @@ function fetchOrSetConfig(context) {
 }
 function loadConfig(context) {
     return __awaiter(this, void 0, void 0, function () {
-        var configStorage, e_2;
+        var configStorage, cfg, e_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, context.store.getItem(gitlabSyncConfigKey)];
@@ -86,7 +86,9 @@ function loadConfig(context) {
                     _a.label = 2;
                 case 2:
                     _a.trys.push([2, 3, , 5]);
-                    return [2 /*return*/, JSON.parse(configStorage)];
+                    cfg = JSON.parse(configStorage);
+                    cfg.api_url = cfg.api_url.replace(/\/\s*$/, "");
+                    return [2 /*return*/, cfg];
                 case 3:
                     e_2 = _a.sent();
                     return [4 /*yield*/, context.app.alert("Invalid JSON!", "Error: " + e_2.message)];

@@ -64,38 +64,58 @@ export class GitlabService {
   private async createBranch(): Promise<string> {
     const branchName = await this.getUserName()
 
-    await this.authenticate().post(
-        `${this.baseGitlabUrl}/repository/branches`,
-        { "branch": branchName, "ref": this.config.branch }
-    )
+    try {
+      await this.authenticate().post(
+          `${this.baseGitlabUrl}/repository/branches`,
+          {"branch": branchName, "ref": this.config.branch}
+      )
+    } catch (e) {
+      await this.context.app.alert('ERROR on branch creation',
+          `Check if you have permission and the branch doesn't already exists.\n ${e.message}`)
+
+      throw e
+    }
 
     return branchName
   }
 
   private async commit(content: string, branchName: string): Promise<void> {
-    await this.authenticate().post(
-        `${this.baseGitlabUrl}/repository/commits`,
-        {
-          "branch": branchName,
-          "commit_message": "More requests!",
-          "actions": [{
-            "action": "update",
-            "file_path": "workspace.json",
-            "content": content
-          }]
-        }
-    )
+    try {
+      await this.authenticate().post(
+          `${this.baseGitlabUrl}/repository/commits`,
+          {
+            "branch": branchName,
+            "commit_message": "More requests!",
+            "actions": [{
+              "action": "update",
+              "file_path": "workspace.json",
+              "content": content
+            }]
+          }
+      )
+    } catch (e) {
+      await this.context.app.alert('ERROR on commit to branch', e.message)
+
+      throw e
+    }
   }
 
   private async createMergeRequest(branchName: string): Promise<string> {
-    const ret = await this.authenticate().post(
-        `${this.baseGitlabUrl}/merge_requests`,
-        {
-          "source_branch": branchName,
-          "target_branch": this.config.branch,
-          "title": `New requests from ${branchName}`,
-          "remove_source_branch": true
-        })
+    let ret
+    try {
+      ret = await this.authenticate().post(
+          `${this.baseGitlabUrl}/merge_requests`,
+          {
+            "source_branch": branchName,
+            "target_branch": this.config.branch,
+            "title": `New requests from ${branchName}`,
+            "remove_source_branch": true
+          })
+    } catch (e) {
+      await this.context.app.alert('ERROR creating Merge Request', e.message)
+
+      throw e
+    }
 
     return ret.data.web_url
   }
