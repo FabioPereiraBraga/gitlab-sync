@@ -22,7 +22,11 @@ async function loadConfig(context: InsomniaContext): Promise<GitlabServiceConfig
   if (configStorage === null) { throw "Unable to fetch config" }
 
   try {
-    return JSON.parse(configStorage)
+    const cfg: GitlabServiceConfig = JSON.parse(configStorage)
+
+    cfg.api_url = cfg.api_url.replace(/\/\s*$/, "")
+
+    return cfg
   } catch (e) {
     await context.app.alert("Invalid JSON!", "Error: " + e.message)
 
