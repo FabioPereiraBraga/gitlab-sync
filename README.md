@@ -14,7 +14,7 @@ This plugin allows users to synchronize collections with a gitlab repository
 2. `cd` into the cloned directory
 
 
-3. Execute ths script `install.sh`, if you have installer Insomnia in a custom folder
+3. Execute ths script `install.sh`, if you have installed Insomnia in a custom folder
 modify the script accordingly.
 
 # Configure
@@ -43,7 +43,7 @@ These permissions are required: `api`, `read_user`, `read_api` and `read_reposit
 
 # Usage
 
-## Pulling the collections
+## Retrieving the collections
 
 * Click on "GitLab - Pull Collection" to retrieve the collections from the repo configured in the settings above.
   
@@ -60,7 +60,7 @@ These permissions are required: `api`, `read_user`, `read_api` and `read_reposit
 
 - $ npm run build-ts
 
-## "Deploying"
+## How to "deploy"
 
 - build it
 - Comment the removal of the plugin directory in `install.sh`, otherwise you'll lose your saved config
