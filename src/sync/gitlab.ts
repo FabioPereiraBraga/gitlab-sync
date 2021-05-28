@@ -77,7 +77,7 @@ export class GitlabService {
         `${this.baseGitlabUrl}/repository/commits`,
         {
           "branch": branchName,
-          "commit_message": "Moar requests!",
+          "commit_message": "More requests!",
           "actions": [{
             "action": "update",
             "file_path": "workspace.json",

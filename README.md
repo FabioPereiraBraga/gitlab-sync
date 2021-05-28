@@ -8,51 +8,34 @@ This plugin allows users to synchronize collections with a gitlab repository
 
 # Installation
 
-**Insomnia's plugin manager**
+1. `git clone` this repo
 
-Install the insomnia-plugin-gitlab-sync plugin from Preferences > Plugins
 
-**Git**
+2. `cd` into the cloned directory
 
-1. git clone https://github.com/jcavendish/gitlab-sync.git
 
-2. Download libraries
-    ```
-     cd gitlab-sync
-     npm install
-    ```
-3. Add the directory installed in the insomnia plugins folder.
-
-   ```
-   cd ..
-   cp -R gitlab-sync  /Users/YOUR-USER/Library/Application\ Support/Insomnia/plugins
-   ``` 
-   **Note** 
-   
-   The path of the plugins directory may change according to the distribution of the operating system 
+3. Execute ths script `install.sh`, if you have installer Insomnia in a custom folder
+modify the script accordingly.
 
 # Configure
 
 1. Create a personal access token to your GitLab account.
    
-   Scope Api
+Mark `all the checkboxes`
    
    ![image](https://user-images.githubusercontent.com/10922392/117333905-cd115480-ae6f-11eb-8b54-689252846e8b.png)
 
-3. Go to Insomnia, click on Insomnia Main Menu, and click on "GitLab - Settings":
+2. Go to Insomnia, click on Insomnia Main Menu, and click on "GitLab - Settings":
    
   ![image](https://user-images.githubusercontent.com/10922392/117336023-267a8300-ae72-11eb-8982-efecdd532818.png)
 
-
-   **Inform the following parameters**
+   **Fill the following fields**
 
    ```
     {
-        "api_url": "http://url-you-server-gitlab.com", 
+        "api_url": "http://url-you-server-gitlab.com, without the rest, stop at the end of the domain name when copying it", 
         "token": "you-personal-access-token", 
-        "id_project": "id-project", 
-        "files": [{ "name": "file-name" }, { "name": "file-name" }], 
-        "ref": "master"
+        "id_project": "The project's id, under the name of the project there's a number :-)",
     }
    ```
    
@@ -60,22 +43,19 @@ Install the insomnia-plugin-gitlab-sync plugin from Preferences > Plugins
 
 # Usage
 
-* Click on "GitLab - Pull Collection" to search the collections of the project informed in the settings
-* Click on "GitLab - Push Collection" 
-to send updates made to the project collection informed in the settings
+* Click on "GitLab - Pull Collection" to retrieve the collections from the repo configured in the settings above.
+* Click on "GitLab - Push Collection" to send updates made to the project collection informed in the settings
   
 # Development
 
-`types` stole from here: https://github.com/PoOwAa/insomnia-plugin-snippet-sync
+`types` stolen from here: https://github.com/PoOwAa/insomnia-plugin-snippet-sync
+
+## How to build
+
+- $ npm run build-ts
 
 ## "Deploying"
 
-- $ npm run build-ts
-- $ rm -fr ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync/
-- $ mkdir -p ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync
-- $ cp package.json ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync/
-- $ cp -R node_modules/ ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync/node_modules
-- $ cp -R built ~/Library/Application\ Support/Insomnia/plugins/gitlab-sync/built
-
-Only the 1st and last step are necessary afterwards, assuming there's no new lib dependency added.
-
+- build it
+- run `install.sh`
+- In Insomnia: Tools -> Reload Plugins
