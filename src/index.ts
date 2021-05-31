@@ -19,7 +19,7 @@ async function fetchOrSetConfig(context: InsomniaContext): Promise<GitlabService
 async function loadConfig(context: InsomniaContext): Promise<GitlabServiceConfig> {
   let configStorage = await context.store.getItem(gitlabSyncConfigKey)
 
-  if (configStorage === null) { throw "Unable to fetch config" }
+  if (configStorage === null) { throw new Error('Unable to fetch config') }
 
   try {
     const cfg: GitlabServiceConfig = JSON.parse(configStorage)
