@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { InsomniaContext } from "../types/insomnia.types";
-import { GitlabServiceConfig } from "../types/plugin.type";
+import axios from 'axios'
+import { InsomniaContext } from "../types/insomnia.types"
+import { GitlabServiceConfig } from "../types/plugin.type"
 
 export class GitlabService {
   private readonly config: GitlabServiceConfig
@@ -25,7 +25,7 @@ export class GitlabService {
 
   public async get(): Promise<any[]> {
     try {
-      const listOfFiles = this.config.files.length === 0 ? await this.getJsonFiles() : this.config.files;
+      const listOfFiles = this.config.files.length === 0 ? await this.getJsonFiles() : this.config.files
 
       const promises = listOfFiles
           .map(file => this.authenticate()

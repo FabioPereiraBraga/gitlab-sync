@@ -1,6 +1,6 @@
-import { GitlabService } from './sync/gitlab.js';
-import { InsomniaContext, InsomniaWorkspaceActionModel } from "./types/insomnia.types";
-import { GitlabServiceConfig } from "./types/plugin.type";
+import { GitlabService } from './sync/gitlab.js'
+import { InsomniaContext, InsomniaWorkspaceActionModel } from "./types/insomnia.types"
+import { GitlabServiceConfig } from "./types/plugin.type"
 
 const gitlabSyncConfigKey = 'gitlab-sync:config'
 const gitlabSyncLastCommitKey = 'gitlab-sync:lastCommit'
@@ -30,7 +30,7 @@ async function loadConfig(context: InsomniaContext): Promise<GitlabServiceConfig
   } catch (e) {
     await context.app.alert("Invalid JSON!", "Error: " + e.message)
 
-    throw e;
+    throw e
   }
 }
 
