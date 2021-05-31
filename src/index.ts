@@ -34,13 +34,8 @@ async function loadConfig(context: InsomniaContext): Promise<GitlabServiceConfig
   }
 }
 
-let provider: GitlabService;
 async function loadProvider(context: InsomniaContext): Promise<GitlabService> {
-  if (!provider) {
-    provider = new GitlabService(context, await loadConfig(context))
-  }
-
-  return provider
+  return new GitlabService(context, await loadConfig(context))
 }
 
 module.exports.workspaceActions = [
