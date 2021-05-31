@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { InsomniaContext } from "../types/insomnia.types";
-import { GitlabServiceConfig } from "../types/plugin.type";
+import axios from 'axios'
+import { InsomniaContext } from "../types/insomnia.types"
+import { GitlabServiceConfig } from "../types/plugin.type"
 
 export class GitlabService {
   private readonly config: GitlabServiceConfig
@@ -25,7 +25,7 @@ export class GitlabService {
 
   public async get(): Promise<any[]> {
     try {
-      const listOfFiles = this.config.files.length === 0 ? await this.getJsonFiles() : this.config.files;
+      const listOfFiles = this.config.files.length === 0 ? await this.getJsonFiles() : this.config.files
 
       const promises = listOfFiles
           .map(file => this.authenticate()
@@ -35,7 +35,7 @@ export class GitlabService {
 
       return responses.map(response => response.data)
     } catch (e) {
-      throw `Collection query failed for informed project ${this.config.id_project}`
+      throw new Error(`Collection query failed for informed project ${this.config.id_project}`)
     }
   }
 
@@ -138,9 +138,9 @@ export class GitlabService {
   }
 
   private static validateConfig(config: GitlabServiceConfig) {
-    if (config.api_url.length === 0) { throw 'Invalid api_url' }
-    if (config.id_project === 0) { throw 'Invalid id_project' }
-    if (config.branch.length === 0) { throw 'Invalid branch' }
-    if (config.token.length === 0) { throw 'Invalid token' }
+    if (config.api_url.length === 0) { throw new Error('Invalid api_url') }
+    if (config.id_project === 0) { throw new Error('Invalid id_project') }
+    if (config.branch.length === 0) { throw new Error('Invalid branch') }
+    if (config.token.length === 0) { throw new Error('Invalid token') }
   }
 }
