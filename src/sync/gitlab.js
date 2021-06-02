@@ -35,12 +35,12 @@ class gitlab {
 
       `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/commits`,
       {
-        "branch": "master",
+        "branch": this.config.ref,
         "commit_message": "Update collection insomnia",
         "actions": [
           {
             "action": "update",
-            "file_path": "comdominio-doc.json",
+            "file_path": this.config.name_file,
             "content": content
           }
         ]
@@ -50,14 +50,14 @@ class gitlab {
      throw `Collection commit failed for the project ${this.config.id_project}`
    }
 
-   
+
   }
 
-  
+
   loadConfig(config) {
-    
+
     this.config = config;
-    
+
     if( typeof(config.token) !== "string" || config.token == "" ){
       throw "Invalid token";
     }
