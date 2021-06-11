@@ -45,6 +45,43 @@ function loadProvider(context){
 }
 
 
+
+async function update(context, models) {
+  
+    try {
+      const message = 'Update collection insomnia';
+      var messageCommit = await context.app.prompt(
+      'GitLab - Message Commit', {
+        label: 'Message Commit',
+        defaultValue: message || '',
+        submitName: 'Commit',
+        cancelable: true,
+      }
+      );
+
+      const data = await context.data.export.insomnia({
+        includePrivate: false,
+        format: 'json',
+        workspace: models.workspace
+      });
+
+      const content = JSON.stringify(JSON.parse(data), null, 2);
+      provider.update(content, messageCommit);
+
+      await context.app.alert( 'GitLab - Push Collection', 'Process concluded' );
+ 
+    } catch (e) { 
+      await context.app.alert( `Collection update error for the project,`, e.message );
+      return; 
+    }
+  
+  
+    return true;
+ 
+}
+
+
+
 module.exports.workspaceActions = [
   {
     label: 'GitLab - Settings',
@@ -57,9 +94,10 @@ module.exports.workspaceActions = [
     label: 'GitLab - Pull Collection',
     icon: 'fa-download',
     action: async (context, models) => {
-      loadProvider(context)
+    
 
       try{
+        await loadProvider(context)
         const file = await provider.get();
         const content = JSON.stringify(file);
         await context.data.import.raw(content);
@@ -74,23 +112,10 @@ module.exports.workspaceActions = [
     label: 'GitLab - Push Collection',
     icon: 'fa-upload',
     action: async (context, models) => {
-
-      loadProvider(context)
-
-      const data = await context.data.export.insomnia({
-        includePrivate: false,
-        format: 'json',
-        workspace: models.workspace
-      });
-      const content = JSON.stringify(JSON.parse(data), null, 2);
-
-      try {
-          provider.update(content);
-          await context.app.alert( 'GitLab - Push Collection', 'Process concluded' );
-      } catch (e) {
-        await context.app.alert( `Collection update error for the project,`, e.message );
-        return;
-      }
+ 
+      loadProvider(context);
+      update(context, models);
+     
     },
   }
 ];
