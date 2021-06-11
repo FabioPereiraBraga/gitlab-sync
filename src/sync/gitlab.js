@@ -28,7 +28,7 @@ class gitlab {
 
 
 
-  async update(content) {
+  async update(content, messageCommit) {
 
    try{
     await this.authenticate().post(
@@ -36,7 +36,7 @@ class gitlab {
       `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/commits`,
       {
         "branch": this.config.ref,
-        "commit_message": "Update collection insomnia",
+        "commit_message": messageCommit,
         "actions": [
           {
             "action": "update",
