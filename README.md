@@ -17,6 +17,8 @@ This plugin allows users to synchronize collections with a gitlab repository
 3. Execute ths script `install.sh`, if you have installed Insomnia in a custom folder
 modify the script accordingly.
 
+4. Disable Insomnia's SSL verification: Preferences -> General -> Request / Response -> **uncheck** "Validate certificates"
+
 # Configure
 
 1. Create a personal access token to your GitLab account.
