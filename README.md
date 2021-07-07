@@ -35,9 +35,7 @@ These permissions are required: `api`, `read_user`, `read_api` and `read_reposit
 
    ```
     {
-        "api_url": "http://url-you-server-gitlab.com, without the rest, stop at the end of the domain name when copying it", 
-        "token": "you-personal-access-token", 
-        "id_project": "The project's id, under the name of the project there's a number :-)",
+        "token": "<The gitlab personal access token you created>",
     }
    ```
    

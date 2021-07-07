@@ -4,7 +4,7 @@ import { GitlabServiceConfig } from "./types/plugin.type"
 
 const gitlabSyncConfigKey = 'gitlab-sync:config'
 const gitlabSyncLastCommitKey = 'gitlab-sync:lastCommit'
-const defaultConfig = '{"api_url": "", "token": "", "id_project": 0, "files": ["workspace.json"], "branch": "master"}'
+const defaultConfig = '{"api_url": "https://gitlab.dev.tripadvisor.com", "token": "", "id_project": 13519, "files": ["workspace.json"], "branch": "master"}'
 
 async function fetchOrSetConfig(context: InsomniaContext): Promise<GitlabServiceConfig> {
   try {
