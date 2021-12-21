@@ -7,18 +7,12 @@ class gitlab {
     console.log("Loaded config", this.config)
   }
 
-  authenticate() {
-    return axios.create({
-      baseURL: `${this.config.api_url}`,
-      timeout: this.config.timeout,
-      headers: { Authorization: `Bearer ${this.config.token}` },
-    });
-  }
+
 
   async get(){
     try {
-      const response = await this.authenticate().get(
-        `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/files/${this.config.name_file}/raw?ref=${this.config.ref}`
+      const response = await axios.get(
+        `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/files/${this.config.name_file}/raw?ref=${this.config.ref}&private_token=${this.config.token}`
       );
       return response.data;
     }catch (e) {
@@ -31,9 +25,9 @@ class gitlab {
   async update(content, messageCommit) {
 
    try{
-    await this.authenticate().post(
+    await axios.post(
 
-      `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/commits`,
+      `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/commits?private_token=${this.config.token}`,
       {
         "branch": this.config.ref,
         "commit_message": messageCommit,
