@@ -24,8 +24,8 @@ class gitlab {
 
   async update(content, messageCommit) {
 
-   try{
-    await axios.post(
+ 
+  return  axios.post(
 
       `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/commits?private_token=${this.config.token}`,
       {
@@ -39,10 +39,9 @@ class gitlab {
           }
         ]
       },
-    );
-   }catch(e){
-     throw `Collection commit failed for the project ${this.config.id_project}`
-   }
+    ).catch(function (error) {
+      throw error;
+    });
 
 
   }

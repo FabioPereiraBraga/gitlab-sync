@@ -12,7 +12,7 @@ async function loadConfig(context) {
       var config = await context.app.prompt(
       'GitLab - Settings', {
         label: 'JSON string',
-        defaultValue: configStorage || '{"api_url": "", "token": "", "id_project": "", "name_file": "", "ref": ""}',
+        defaultValue: (configStorage !== 'undefined') ? configStorage : '{"api_url": "", "token": "", "id_project": "", "name_file": "", "ref": ""}',
         submitName: 'Save',
         cancelable: true,
       }
@@ -65,10 +65,21 @@ async function update(context, models) {
         workspace: models.workspace
       });
 
-      const content = JSON.stringify(JSON.parse(data), null, 2);
-      provider.update(content, messageCommit);
+       const content = JSON.stringify(JSON.parse(data), null, 2);
+       
+     
 
-      await context.app.alert( 'GitLab - Push Collection', 'Process concluded' );
+       provider.update(content, messageCommit).then((response)=>{
+        console.log(response);
+          context.app.alert( 'GitLab - Push Collection', 'Process concluded' );
+       }).catch((error) => {
+        let errorToJson = error.toJSON();
+        context.app.alert( 'GitLab - Push Collection Error', errorToJson.message );
+        console.log(errorToJson);
+      });
+      
+
+     
  
     } catch (e) { 
       await context.app.alert( `Collection update error for the project,`, e.message );
