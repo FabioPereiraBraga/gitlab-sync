@@ -1,0 +1,11 @@
+version: "3"
+
+
+services:
+  plugin:
+    image: node:10
+    container_name: plugin
+    tty: true
+    volumes:
+      - ./:/usr/src/plugin
+
