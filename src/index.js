@@ -28,19 +28,11 @@ async function loadConfig(context, models) {
   return true;
 }
 
-function loadProvider(context, models){
-  let configStorage = context.store.getItem(getStoreKey(models));
-
-  configStorage.then((value) => {
-    var configObject = JSON.parse(value);
-    console.log("Loaded config", value)
-    provider = new gitlab(context, configObject);
-  }, (err) => {
-    context.app.alert("Invalid JSON!", "Error: " + e.message);
-    return false;
-  });
-
-  return true
+async function loadProvider(context, models){
+  const configStorage = await context.store.getItem(getStoreKey(models));
+  const configObject = JSON.parse(configStorage);
+  console.log("Loaded config", configStorage);
+  provider = new gitlab(context, configObject);
 }
 
 async function update(context, models) {
@@ -93,7 +85,7 @@ module.exports.workspaceActions = [
     icon: 'fa-download',
     action: async (context, models) => {
       try{
-        loadProvider(context, models)
+        await loadProvider(context, models)
         const file = await provider.get();
         const content = JSON.stringify(file);
         await context.data.import.raw(content);
@@ -108,7 +100,7 @@ module.exports.workspaceActions = [
     label: 'GitLab - Push Collection',
     icon: 'fa-upload',
     action: async (context, models) => {
-      loadProvider(context, models);
+      await loadProvider(context, models);
       update(context, models);
     },
   }
