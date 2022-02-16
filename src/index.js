@@ -1,53 +1,49 @@
 const gitlab = require('./sync/gitlab.js');
 
-
 var provider;
 
-
-async function loadConfig(context) {
-  const configStorage = await context.store.getItem('gitlab-sync:config');
-  
-    // Prompt for the configuration
-    try {
-      var config = await context.app.prompt(
-      'GitLab - Settings', {
-        label: 'JSON string',
-        defaultValue: (configStorage !== 'undefined') ? configStorage : '{"api_url": "", "token": "", "id_project": "", "name_file": "", "ref": ""}',
-        submitName: 'Save',
-        cancelable: true,
-      }
-      );
-    } catch (e) { return false }
-  
-
-    await context.store.setItem('gitlab-sync:config', config);
-  
-    return true;
- 
+function getStoreKey(models) {
+  return `gitlab-sync:config:${models.workspace._id}`;
 }
 
-function loadProvider(context){
-  let configStorage = context.store.getItem('gitlab-sync:config') 
-  
+async function loadConfig(context, models) {
+  const storeKey = getStoreKey(models);
 
+  const configStorage = await context.store.getItem(storeKey);
 
-  configStorage.then( (value)=>{
+  // Prompt for the configuration
+  try {
+    var config = await context.app.prompt(
+    'GitLab - Settings', {
+      label: 'JSON string',
+      defaultValue: (configStorage !== 'undefined') ? configStorage : '{"api_url": "", "token": "", "id_project": "", "name_file": "", "ref": ""}',
+      submitName: 'Save',
+      cancelable: true,
+    }
+    );
+  } catch (e) { return false }
+
+  await context.store.setItem(storeKey, config);
+
+  return true;
+}
+
+function loadProvider(context, models){
+  let configStorage = context.store.getItem(getStoreKey(models));
+
+  configStorage.then((value) => {
     var configObject = JSON.parse(value);
     console.log("Loaded config", value)
     provider = new gitlab(context, configObject);
-  }, ( err )=>{
+  }, (err) => {
     context.app.alert("Invalid JSON!", "Error: " + e.message);
     return false;
   });
 
- 
   return true
 }
 
-
-
 async function update(context, models) {
-  
     try {
       const message = 'Update collection insomnia';
       var messageCommit = await context.app.prompt(
@@ -66,8 +62,6 @@ async function update(context, models) {
       });
 
        const content = JSON.stringify(JSON.parse(data), null, 2);
-       
-     
 
        provider.update(content, messageCommit).then((response)=>{
         console.log(response);
@@ -77,38 +71,29 @@ async function update(context, models) {
         context.app.alert( 'GitLab - Push Collection Error', errorToJson.message );
         console.log(errorToJson);
       });
-      
 
-     
- 
-    } catch (e) { 
+    } catch (e) {
       await context.app.alert( `Collection update error for the project,`, e.message );
-      return; 
+      return;
     }
-  
-  
+
     return true;
- 
 }
-
-
 
 module.exports.workspaceActions = [
   {
     label: 'GitLab - Settings',
     icon: 'fa-cogs',
     action: async (context, models) => {
-      await loadConfig(context, true);
+      await loadConfig(context, models);
     },
   },
   {
     label: 'GitLab - Pull Collection',
     icon: 'fa-download',
     action: async (context, models) => {
-    
-
       try{
-        await loadProvider(context)
+        loadProvider(context, models)
         const file = await provider.get();
         const content = JSON.stringify(file);
         await context.data.import.raw(content);
@@ -123,10 +108,8 @@ module.exports.workspaceActions = [
     label: 'GitLab - Push Collection',
     icon: 'fa-upload',
     action: async (context, models) => {
- 
-      loadProvider(context);
+      loadProvider(context, models);
       update(context, models);
-     
     },
   }
 ];
