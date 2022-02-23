@@ -16,7 +16,7 @@ async function loadConfig(context, models) {
     var config = await context.app.prompt(
     'GitLab - Settings', {
       label: 'JSON string',
-      defaultValue: (configStorage !== 'undefined') ? configStorage : '{"api_url": "", "token": "", "id_project": "", "name_file": "", "ref": ""}',
+      defaultValue: (configStorage !== null && configStorage !== 'undefined') ? configStorage : '{"api_url": "", "token": "", "id_project": "", "name_file": "", "ref": ""}',
       submitName: 'Save',
       cancelable: true,
     }
