@@ -12,7 +12,7 @@ class gitlab {
   async get(){
     try {
       const response = await axios.get(
-        `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/files/${this.config.name_file}/raw?ref=${this.config.ref}&private_token=${this.config.token}`
+        `${this.config.api_url}/api/v4/projects/${this.config.id_project}/repository/files/${encodeURIComponent(this.config.name_file)}/raw?ref=${this.config.ref}&private_token=${this.config.token}`
       );
       return response.data;
     }catch (e) {
